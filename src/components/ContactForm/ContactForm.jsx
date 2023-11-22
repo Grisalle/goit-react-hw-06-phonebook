@@ -1,36 +1,49 @@
 import { useState } from 'react';
+import { nanoid } from 'nanoid';
+import { useDispatch, useSelector } from 'react-redux';
+import { createNewUser } from 'redux/phone.reducer';
 import css from './ContactForm.module.css';
 
-export const ContactForm = ({ createUser, contacts }) => {
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const handleChange = name => event => {
-    const { value } = event.target;
-    if (name === 'name') {
-      setName(value);
-    } else if (name === 'number') {
-      setNumber(value);
-    }
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.phoneStore.contacts);
+
+  const handleNameChange = event => {
+    setName(event.target.value);
+  };
+
+  const handleNumberChange = event => {
+    setNumber(event.target.value);
   };
 
   const handleSubmit = event => {
     event.preventDefault();
 
+    const contact = {
+      name,
+      number,
+    };
+
     if (
       contacts.some(
-        contact => contact.name.toLowerCase() === name.toLowerCase()
+        item => item.name.toLowerCase() === contact.name.toLowerCase()
       )
     ) {
       alert(`${name} is already in your contacts`);
       return;
     }
 
-    if (number && name) {
-      createUser({ name, number });
-      setName('');
-      setNumber('');
-    }
+    const newContact = {
+      ...contact,
+      id: nanoid(),
+    };
+
+    dispatch(createNewUser(newContact));
+    setName('');
+    setNumber('');
   };
 
   return (
@@ -41,7 +54,7 @@ export const ContactForm = ({ createUser, contacts }) => {
           className={css.inputName}
           type="text"
           value={name}
-          onChange={handleChange('name')}
+          onChange={handleNameChange}
           name="name"
           maxLength="16"
           pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -55,7 +68,7 @@ export const ContactForm = ({ createUser, contacts }) => {
           className={css.inputNumber}
           type="tel"
           value={number}
-          onChange={handleChange('number')}
+          onChange={handleNumberChange}
           name="number"
           maxLength="13"
           pattern="\+?\d{1,4}?[.\-\s]?\(?\d{1,3}?\)?[.\-\s]?\d{1,4}[.\-\s]?\d{1,4}[.\-\s]?\d{1,9}"

@@ -1,15 +1,19 @@
 import { DeleteButton } from 'components/DeleteButton/DeleteButton';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { deleteUser } from 'redux/phone.reducer';
 import css from './ContactItem.module.css';
 
-export const ContactItem = ({ userName, userNumber, id, handleDeleteUser }) => {
+export const ContactItem = ({ contact }) => {
+  const dispatch = useDispatch();
+
   return (
-    <li className={css.contactItem} id={id}>
+    <li className={css.contactItem} id={contact.id}>
       <p>
-        <span className={css.userName}>{`${userName}: `}</span>
-        {`${userNumber}`}
+        <span className={css.userName}>{`${contact.name}: `}</span>
+        {`${contact.number}`}
       </p>
-      <DeleteButton userId={id} handleDeleteUser={handleDeleteUser} />
+      <DeleteButton handleDeleteUser={() => dispatch(deleteUser(contact.id))} />
     </li>
   );
 };

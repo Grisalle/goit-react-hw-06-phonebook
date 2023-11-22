@@ -1,8 +1,12 @@
 import { ContactItem } from './ContactItem';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import css from './ContactList.module.css';
 
-export const ContactList = ({ contacts, filter, handleDeleteUser }) => {
+export const ContactList = () => {
+  const contacts = useSelector(state => state.phoneStore.contacts);
+  const filter = useSelector(state => state.filterStore);
+
   return (
     <ul className={css.contactList}>
       {contacts
@@ -12,13 +16,7 @@ export const ContactList = ({ contacts, filter, handleDeleteUser }) => {
             contact.number.toLowerCase().includes(filter.toLowerCase())
         )
         .map(contact => (
-          <ContactItem
-            handleDeleteUser={handleDeleteUser}
-            userName={contact.name}
-            userNumber={contact.number}
-            id={contact.id}
-            key={contact.id}
-          />
+          <ContactItem contact={contact} key={contact.id} />
         ))}
     </ul>
   );
