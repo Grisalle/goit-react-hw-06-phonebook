@@ -1,5 +1,4 @@
 import { DeleteButton } from 'components/DeleteButton/DeleteButton';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { deleteUser } from 'redux/phone.reducer';
 import css from './ContactItem.module.css';
@@ -16,11 +15,4 @@ export const ContactItem = ({ contact }) => {
       <DeleteButton handleDeleteUser={() => dispatch(deleteUser(contact.id))} />
     </li>
   );
-};
-
-DeleteButton.propTypes = {
-  userName: PropTypes.string,
-  userNumber: PropTypes.string,
-  id: PropTypes.string,
-  handleDeleteUser: PropTypes.func.isRequired,
 };
